@@ -1,8 +1,9 @@
 # The data is taken in csv format from the WHO database
-w <- read.csv('/home/jiraya/WHO-COVID-19-global-data.csv')
+w <- read.csv('WHO-COVID-19-global-data.csv')
+
 # The dates of cases in the whole world are taken
 t <- sort(unique(w$Date_reported))
-# Different countries are uniquely taken
+# Country list is also taken as below
 cn <- sort(unique(w$Country))
 
 # All the cases in the world are stored in each index
