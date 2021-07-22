@@ -18,7 +18,16 @@ for (i in 1:length(case_dates)) {
 # The vector above is converted to dataframe wih dates as below.
 daily_cases_df <- data.frame('date' = as.Date(case_dates) , 'cases' = daily_cases)
 
-# Let us check the plot of the data
+# Let us check the plot of the data in original and in differenced form.
 plot(daily_cases_df, type = "l")
 
-# There are supposedly three waves.
+# In the differenced form of the data, the increasing variance in the rate of
+# change of new covid cases can be seen.
+# plot(
+#   daily_cases_df$date[2:(length(daily_cases))],diff(daily_cases_df$cases),
+#   type = "l"
+# )
+
+# There are supposedly three waves. Hence, the two visible waves can be deduced
+# into log-normal and normal distribution. The third wave can be assumed to be
+# symmetrically log-normal like the first one.
