@@ -24,10 +24,15 @@ plot(daily_cases_df, type = "l")
 # In the differenced form of the data, the increasing variance in the rate of
 # change of new covid cases can be seen.
 # plot(
-#   daily_cases_df$date[2:(length(daily_cases))],diff(daily_cases_df$cases),
+#   daily_cases_df$date[2:length(daily_cases)],
+#   diff(daily_cases_df$cases),
 #   type = "l"
 # )
 
 # There are supposedly three waves. Hence, the two visible waves can be deduced
 # into log-normal and normal distribution. The third wave can be assumed to be
 # symmetrically log-normal like the first one.
+
+# The deconstruction can be done as below.
+
+plot(daily_cases_df[daily_cases_df$date < "2021-03-01",], type = "l")
