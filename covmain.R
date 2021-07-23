@@ -18,6 +18,8 @@ for (i in 1:length(case_dates)) {
 # The vector above is converted to dataframe wih dates as below.
 daily_cases_df <- data.frame('date' = as.Date(case_dates) , 'cases' = daily_cases)
 
+rm(raw_data, case_dates, daily_cases)
+
 # Let us check the plot of the data in original and in differenced form.
 plot(daily_cases_df, type = "l")
 
@@ -59,8 +61,9 @@ third_wave_df <- daily_cases_df[daily_cases_df$date > second_end,]
 
 # ----------------- The first wave log-normal trend ----------------- #
 
-# The function that returns the residual sum squared for given parameters
-x <- length(first_wave_df$cases)
+x <- 1:length(first_wave_df$cases)
+
+# The function that returns the residual sum squared for given parameters.
 residual_sum_squared <- function(parameter) {
   return(
     sum(
@@ -72,3 +75,5 @@ residual_sum_squared <- function(parameter) {
     )
   )
 }
+
+# The minimization of the RSS would require some initialized elements.
