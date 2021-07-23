@@ -76,4 +76,7 @@ residual_sum_squared <- function(parameter) {
   )
 }
 
-# The minimization of the RSS would require some initialized elements.
+# The minimization of the RSS would be done with different iterations of the
+# optim fucntion. The problem is that the optim function's efficiency depends
+# on the initialized values. This is why we use different iterations wrt
+# different parameters.
