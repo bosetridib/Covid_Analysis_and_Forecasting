@@ -69,7 +69,7 @@ residual_sum_squared <- function(parameter) {
     sum(
       ( first_wave_df$cases - 
           (parameter[1]*dlnorm(
-            x, mean = parameter[2], sd = parameter[3]
+            (length(first_wave_df$cases) + 1 - x), mean = parameter[2], sd = parameter[3]
           ))
         )^2
     )
@@ -79,4 +79,37 @@ residual_sum_squared <- function(parameter) {
 # The minimization of the RSS would be done with different iterations of the
 # optim fucntion. The problem is that the optim function's efficiency depends
 # on the initialized values. This is why we use different iterations wrt
-# different parameters.
+# different parameters. The i, j and k are the different parameters in the
+# RSS function, respectively.
+
+val <- NULL
+
+for (i in seq(5000,200000, by=5000)) {
+  for (j in seq(0.5,5, by=0.5)) {
+    for (k in seq(0.5,5, by=0.5)) {
+      val <- rbind(
+        val,
+        c(
+          optim(c(i,j,k), residual_sum_squared)$par,
+          optim(c(i,j,k), residual_sum_squared)$value
+        )
+      )
+    }
+  }
+}
+
+# Of all the iterations, the parameters that minimize the RSS function overall:
+est_parameters <- val[val[,4] == min(val[,4]),1:3]
+# 1.260202e+08 4.756657e+00 1.056320e+00
+
+# The plot of the values would be as below.
+plot(first_wave_df$date, first_wave_df$cases, type = "l")
+lines(
+  first_wave_df$date,
+  est_parameters[1]*(
+    dlnorm(
+      length(first_wave_df$cases) - x,
+      mean = est_parameters[2], sd=est_parameters[3]
+    )
+  )
+)
