@@ -107,7 +107,7 @@ for (shift in (length(x)-20) : (length(x)+20)) {
 # The last column of the val matrix is the minimized RSS in each iteration. Of
 # all the iterations, the parameters that minimize the RSS function 'overall':
 est_parameters <- val[val[,5] == min(val[,5]),1:4]
-# 1.208460e+08 5.169552e+00 4.861358e-01 4.986300e+02 1.052988e+12
+# 1.179667e+08 4.953044e+00 6.086517e-01 4.597038e+02 9.862836e+11
 
 # The plot of the values would be as below.
 plot(first_wave_df$date, first_wave_df$cases, type = "l")
