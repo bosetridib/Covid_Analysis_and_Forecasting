@@ -91,7 +91,7 @@ val <- NULL
 for (shift in (length(x)-20) : (length(x)+20)) {
   for (amp in seq(10^7,4*10^8, by=10^7)){
     for (meanval in seq(2,7, by=0.5)){
-      for (stddev in seq(0.01,1, by=0.01)){
+      for (stddev in seq(0.05,2, by=0.05)){
         val <- rbind(
           val,
           c(
