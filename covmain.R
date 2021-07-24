@@ -59,7 +59,7 @@ second_wave_df <- daily_cases_df[
 
 third_wave_df <- daily_cases_df[daily_cases_df$date > second_end,]
 
-# ----------------- The first wave log-normal trend ----------------- #
+# ----------------- The first wave: log-normal trend ----------------- #
 
 x <- 1:length(first_wave_df$cases)
 
@@ -71,7 +71,7 @@ residual_sum_squared <- function(parameter) {
         first_wave_df$cases -
           (
             parameter[1]*dlnorm(
-              (parameter[4] - x), # Read Flipped for the 4th parameter
+              (parameter[4] - x), # Read Flipped-lnorm for the 4th parameter
               mean = parameter[2], sd = parameter[3]
             )
           )
@@ -88,10 +88,10 @@ residual_sum_squared <- function(parameter) {
 
 val <- NULL
 
-for (shift in (length(x)-20) : (length(x)+20)) {
-  for (amp in seq(10^7,4*10^8, by=10^7)){
-    for (meanval in seq(2,7, by=0.5)){
-      for (stddev in seq(0.05,2, by=0.05)){
+for (shift in (length(x)-30) : (length(x)+30)) {
+  for (amp in seq(10^7,3*10^8, by=10^7)){
+    for (meanval in seq(2.5,7.5, by=0.5)){
+      for (stddev in seq(0.10,1.10, by=0.05)){
         val <- rbind(
           val,
           c(
@@ -106,17 +106,70 @@ for (shift in (length(x)-20) : (length(x)+20)) {
 
 # The last column of the val matrix is the minimized RSS in each iteration. Of
 # all the iterations, the parameters that minimize the RSS function 'overall':
-est_parameters <- val[val[,5] == min(val[,5]),1:4]
-# 1.179667e+08 4.953044e+00 6.086517e-01 4.597038e+02 9.862836e+11
+est_parameters_first <- val[val[,5] == min(val[,5]),1:4]
+# est_parameters_first <- c(1.178663e+08, 4.931919e+00, 6.258448e-01, 4.560777e+02)
 
 # The plot of the values would be as below.
 plot(first_wave_df$date, first_wave_df$cases, type = "l")
 lines(
   first_wave_df$date,
-  est_parameters[1]*(
+  est_parameters_first[1]*(
     dlnorm(
-      est_parameters[4] - x,
-      mean = est_parameters[2], sd=est_parameters[3]
+      est_parameters_first[4] - x,
+      mean = est_parameters_first[2], sd=est_parameters_first[3]
+    )
+  )
+)
+
+
+# -------------------- The second wave: normal trend -------------------- #
+
+x <- 1:length(second_wave_df$cases)
+
+# The function that returns the residual sum squared for given parameters.
+residual_sum_squared <- function(parameter) {
+  return(
+    sum(
+      (
+        second_wave_df$cases -
+          ( parameter[4] + # Read Shifted-norm for the 4th parameter
+            (parameter[1]*dnorm(
+              x,
+              mean = parameter[2], sd = parameter[3]
+            ))
+          )
+      )^2
+    )
+  )
+}
+
+val <- NULL
+
+for (shift in seq(2*10^5, 4*10^5, by=10^4)) {
+  for (amp in seq(10^7,3*10^8, by=10^7)){
+    for (meanval in seq(2.5,7.5, by=0.5)){
+      for (stddev in seq(0.10,1.10, by=0.05)){
+        val <- rbind(
+          val,
+          c(
+            optim(c(amp,meanval,stddev,shift), residual_sum_squared)$par,
+            optim(c(amp,meanval,stddev,shift), residual_sum_squared)$value
+          )
+        )
+      }
+    }
+  }
+}
+
+est_parameters_second <- val[val[,5] == min(val[,5]),1:4]
+
+plot(second_wave_df$date, second_wave_df$cases, type = "l")
+lines(
+  second_wave_df$date,
+  est_parameters_second[1]*(
+    dlnorm(
+      est_parameters_second[4] - x,
+      mean = est_parameters_second[2], sd=est_parameters_second[3]
     )
   )
 )
