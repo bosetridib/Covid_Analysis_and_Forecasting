@@ -132,11 +132,11 @@ residual_sum_squared <- function(parameter) {
     sum(
       (
         second_wave_df$cases -
-          ( parameter[4] + # Read Shifted-norm for the 4th parameter
+          parameter[4] + # Read Shifted-norm for the 4th parameter
             (parameter[1]*dnorm(
               x,
               mean = parameter[2], sd = parameter[3]
-            ))
+            )
           )
       )^2
     )
@@ -146,9 +146,9 @@ residual_sum_squared <- function(parameter) {
 val <- NULL
 
 for (shift in seq(2*10^5, 4*10^5, by=10^4)) {
-  for (amp in seq(10^7,3*10^8, by=10^7)){
-    for (meanval in seq(2.5,7.5, by=0.5)){
-      for (stddev in seq(0.10,1.10, by=0.05)){
+  for (amp in seq(10^6,10*10^7, by=10^6)){
+    for (meanval in seq(60,70, by=1)){
+      for (stddev in seq(10,100, by=10)){
         val <- rbind(
           val,
           c(
@@ -161,14 +161,14 @@ for (shift in seq(2*10^5, 4*10^5, by=10^4)) {
   }
 }
 
-est_parameters_second <- val[val[,5] == min(val[,5]),1:4]
+est_parameters_second <- val[val[,5] == min(val[,5]),1:4][1,]
 
 plot(second_wave_df$date, second_wave_df$cases, type = "l")
 lines(
   second_wave_df$date,
-  est_parameters_second[1]*(
-    dlnorm(
-      est_parameters_second[4] - x,
+  est_parameters_second[4] + est_parameters_second[1]*(
+    dnorm(
+      x,
       mean = est_parameters_second[2], sd=est_parameters_second[3]
     )
   )
