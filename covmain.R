@@ -67,11 +67,15 @@ x <- 1:length(first_wave_df$cases)
 residual_sum_squared <- function(parameter) {
   return(
     sum(
-      ( first_wave_df$cases - 
-          (parameter[1]*dlnorm(
-            (length(first_wave_df$cases) + 1 - x), mean = parameter[2], sd = parameter[3]
-          ))
-        )^2
+      (
+        first_wave_df$cases -
+          (
+            parameter[1]*dlnorm(
+              (parameter[4] - x), # Read Flipped for the 4th parameter
+              mean = parameter[2], sd = parameter[3]
+            )
+          )
+      )^2
     )
   )
 }
@@ -84,22 +88,25 @@ residual_sum_squared <- function(parameter) {
 
 val <- NULL
 
-for (i in seq(5000,200000, by=5000)) {
-  for (j in seq(0.5,5, by=0.5)) {
-    for (k in seq(0.5,5, by=0.5)) {
-      val <- rbind(
-        val,
-        c(
-          optim(c(i,j,k), residual_sum_squared)$par,
-          optim(c(i,j,k), residual_sum_squared)$value
+for (shift in (length(x)-30) : (length(x)+30)) {
+  for (i in seq(5000,200000, by=5000)){
+    for (j in seq(0.5,5, by=0.5)){
+      for (k in seq(0.5,5, by=0.5)){
+        val <- rbind(
+          val,
+          c(
+            optim(c(i,j,k,shift), residual_sum_squared)$par,
+            optim(c(i,j,k,shift), residual_sum_squared)$value
+          )
         )
-      )
+      }
     }
   }
 }
 
-# Of all the iterations, the parameters that minimize the RSS function overall:
-est_parameters <- val[val[,4] == min(val[,4]),1:3]
+# The last column of the val matrix is the minimized RSS in each iteration. Of
+# all the iterations, the parameters that minimize the RSS function 'overall':
+est_parameters <- val[val[,5] == min(val[,5]),1:4]
 # 1.260202e+08 4.756657e+00 1.056320e+00
 
 # The plot of the values would be as below.
@@ -108,7 +115,7 @@ lines(
   first_wave_df$date,
   est_parameters[1]*(
     dlnorm(
-      length(first_wave_df$cases) - x,
+      est_parameters[4] - x,
       mean = est_parameters[2], sd=est_parameters[3]
     )
   )
