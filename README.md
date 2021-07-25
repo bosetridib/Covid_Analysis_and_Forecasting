@@ -2,9 +2,9 @@
 
 The objective is to deconstruct and build the trend of the two waves by curve fitting. It is assumed that the waves are - log-normal and normal PDFs - shaped. The curve fitting is intended to give us the parameters of the trend. The assumption is taken since the intention of curve fitting is to obtain estimates which would define the functional form of the curve (not just for curve-smoothening or kernel density).
 
-Flipped-lnorm:
+Flipped-Lnorm:
 
-For the log normal distribution be Z ~ L(x,m,s), the curve is right-skewed. But in our cases, we have to build the trend which is left-skewed, which is supposed to be a flipped version of the usual curve. For this, to build such a curve, we take y=c-x, for c be the point on the horizontal axis where the required left-skewed curve would end. We have estimated the curve as y=c-x for Z ~ a*L(x,m,s), where a is the amplitude, m is mean, s is sd and c is the shift parameter - the four parameters that would be estimated with the 4-level iterations. TL;DR - the shifted curve of Z ~ a*L(x,m,s) would be a*L(y,m,s) or a*L(c-x,m,s)
+For the log normal distribution be Z ~ L(x,m,s), the curve is right-skewed. But in our cases, we have to build the trend which is left-skewed, which is supposed to be a flipped version of the usual curve. For this, to build such a curve, we take y=c-x, for c be the point on the horizontal axis where the required left-skewed curve would end. We have estimated the curve as y=c-x for Z ~ a.L(x,m,s), where a is the amplitude, m is mean, s is sd and c is the shift parameter - the four parameters that would be estimated with the 4-level iterations. TL;DR - the shifted curve of Z ~ a.L(x,m,s) would be a.L(y,m,s) or a.L(c-x,m,s)
 
 Shifted-norm:
 
