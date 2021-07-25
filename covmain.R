@@ -228,10 +228,12 @@ est_parameters_third <- val3[val3[,5] == min(val3[,5]),1:4]
 x3_next <- 1:(400 - length(x3))
 
 third_wave_rest <- est_parameters_third[1]*(dlnorm(
-  x3_next+est_parameters_third[4],
+  (1:4400) +est_parameters_third[4],
   mean = est_parameters_third[2], sd=est_parameters_third[3]
 ))
 
+plot(third_wave_rest)
+tail(third_wave_rest)
 # The plot of the values would be as below.
 plot(third_wave_df$date, third_wave_df$cases, type = "l")
 lines(
