@@ -228,14 +228,44 @@ est_parameters_third <- val3[val3[,5] == min(val3[,5]),1:4]
 x3_next <- 1:(400 - length(x3))
 
 third_wave_rest <- est_parameters_third[1]*(dlnorm(
-  (1:4400) +est_parameters_third[4],
+  (1:400) +est_parameters_third[4],
   mean = est_parameters_third[2], sd=est_parameters_third[3]
 ))
 
-plot(third_wave_rest)
+plot(third_wave_rest, type = "l")
 tail(third_wave_rest)
 # The plot of the values would be as below.
 plot(third_wave_df$date, third_wave_df$cases, type = "l")
+lines(
+  third_wave_df$date,
+  est_parameters_third[1]*(
+    dlnorm(
+      x3+est_parameters_third[4],
+      mean = est_parameters_third[2], sd=est_parameters_third[3]
+    )
+  )
+)
+
+plot(daily_cases_df, type = "p")
+
+lines(
+  first_wave_df$date,
+  est_parameters_first[1]*(
+    dlnorm(
+      est_parameters_first[4] - x1,
+      mean = est_parameters_first[2], sd=est_parameters_first[3]
+    )
+  )
+)
+lines(
+  second_wave_df$date,
+  est_parameters_second[4] + est_parameters_second[1]*(
+    dnorm(
+      x2,
+      mean = est_parameters_second[2], sd=est_parameters_second[3]
+    )
+  )
+)
 lines(
   third_wave_df$date,
   est_parameters_third[1]*(
