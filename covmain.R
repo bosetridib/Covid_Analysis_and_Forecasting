@@ -218,22 +218,6 @@ for (shift in seq(-30,30, by=5)) {
 est_parameters_third <- val3[val3[,5] == min(val3[,5]),1:4]
 # est_parameters_third <- c(1.330033e+09, 7.505285e+00, 1.528345e+00, 3.000064e+01)
 
-# With these parameters, we can PREDICT when the third wave would end. It is
-# assumed here that the third wave is the final one, and for that reason the
-# parameters would tell us when would the cases be lowered to 100 or 1000 cases,
-# which might suggest the time Covid cases would supposedly be ending.
-
-# Assuming that the wave would last for 400 days (about the length of first wave)
-# we estimate the number of expected cases for the rest of the peiod.
-x3_next <- 1:(400 - length(x3))
-
-third_wave_rest <- est_parameters_third[1]*(dlnorm(
-  (1:400) +est_parameters_third[4],
-  mean = est_parameters_third[2], sd=est_parameters_third[3]
-))
-
-plot(third_wave_rest, type = "l")
-tail(third_wave_rest)
 # The plot of the values would be as below.
 plot(third_wave_df$date, third_wave_df$cases, type = "l")
 lines(
@@ -246,8 +230,10 @@ lines(
   )
 )
 
-plot(daily_cases_df, type = "l")
 
+
+# ------------------------ Complete Plot ------------------------ #
+plot(daily_cases_df, type = "l", lwd = 1)
 lines(
   first_wave_df$date,
   est_parameters_first[1]*(
@@ -255,7 +241,7 @@ lines(
       est_parameters_first[4] - x1,
       mean = est_parameters_first[2], sd=est_parameters_first[3]
     )
-  )
+  ) , lty = "dashed", lwd = 2
 )
 lines(
   second_wave_df$date,
@@ -264,7 +250,7 @@ lines(
       x2,
       mean = est_parameters_second[2], sd=est_parameters_second[3]
     )
-  )
+  ) , lty = "dashed", lwd = 2
 )
 lines(
   third_wave_df$date,
@@ -273,5 +259,25 @@ lines(
       x3+est_parameters_third[4],
       mean = est_parameters_third[2], sd=est_parameters_third[3]
     )
-  )
+  ) , lty = "dashed", lwd = 2
 )
+
+
+# -------------------------------- Predict -------------------------------- #
+# With these parameters, we can PREDICT when the third wave would end. It is
+# assumed here that the third wave is the final one, and for that reason the
+# parameters would tell us when would the cases be lowered to 100 or 1000 cases,
+# which might suggest the time Covid cases would supposedly be ending.
+
+# Assuming that the wave would last for 400 days (about the length of first wave)
+# we estimate the number of expected cases for the rest of the peiod.
+x3_next <- 1:(400 - length(x3))
+
+third_wave_rest <- est_parameters_first[1]*(dlnorm(
+  (1:600),
+  mean = est_parameters_first[2], sd=est_parameters_first[3]
+))
+
+plot(third_wave_rest, type = "l")
+max(third_wave_rest)
+tail(third_wave_rest)
