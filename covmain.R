@@ -246,7 +246,7 @@ lines(
   )
 )
 
-plot(daily_cases_df, type = "p")
+plot(daily_cases_df, type = "l")
 
 lines(
   first_wave_df$date,
