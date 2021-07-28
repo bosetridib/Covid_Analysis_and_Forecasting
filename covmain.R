@@ -2,7 +2,7 @@
 raw_data <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 # or from the downloaded csv from the url
 # raw_data <- read.csv("WHO-COVID-19-global-data.csv")
-View(raw_data)
+# View(raw_data)
 
 # To get the worldwide daily cases, the date should be uniquely obtained.
 case_dates <- sort(unique(raw_data$Date_reported))
@@ -278,7 +278,18 @@ third_wave_rest <- est_parameters_third[1]*(dlnorm(
   mean = est_parameters_third[2], sd=est_parameters_third[3]
 ))
 
+lines(
+  third_wave_df$date,
+  est_parameters_first[1]*(
+    dlnorm(
+      x3+est_parameters_third[4],
+      mean = est_parameters_first[2], sd=est_parameters_first[3]
+    )
+  ) , lty = "dashed", lwd = 2
+)
+
+
 plot(third_wave_df, type = "l")
-lines(third_wave_df$date,third_wave_rest)
+lines(x3_next,third_wave_rest)
 max(third_wave_rest)
 tail(third_wave_rest)
