@@ -266,30 +266,67 @@ lines(
 # -------------------------------- Predict -------------------------------- #
 # With these parameters, we can PREDICT when the third wave would end. It is
 # assumed here that the third wave is the final one, and for that reason the
-# parameters would tell us when would the cases be lowered to 100 or 1000 cases,
-# which might suggest the time Covid cases would supposedly be ending.
+# parameters would tell us when would the cases be lower or maximized, which
+# might suggest the time Covid cases would supposedly be ending.
 
 # Assuming that the wave would last for 400 days (about the length of first wave)
 # we estimate the number of expected cases for the rest of the peiod.
-x3_next <- 1:(400 - length(x3))
+x3_rest <- 1:(400 - length(x3))
 
-third_wave_rest <- est_parameters_third[1]*(dlnorm(
-  (1:600),
-  mean = est_parameters_third[2], sd=est_parameters_third[3]
+# Assuming that the third wave would have the same mean and standard deviation
+# as the first, and only the positional and shifting parameters would change,
+# we can restrict the estimation procedure so as to predict the cases. So,
+# fixing the mean and sd, we may estimate the amplitude and the shifting parameters.
+
+residual_sum_squared_third_rest <- function(parameter) {
+  return(
+    sum(
+      (
+        third_wave_df$cases -
+          (
+            parameter[1]*dlnorm(
+              (x3 + parameter[2]), # The mean and sd are restricted to the first wave.
+              mean = est_parameters_first[2], sd = est_parameters_first[3]
+            )
+          )
+      )^2
+    )
+  )
+}
+
+val3_rest <- NULL
+
+for (shift in seq(-30,30, by=5)) {
+  for (amp in seq(10^7,4*10^8, by=10^7)) {
+    val3_rest <- rbind(
+      val3_rest,
+      c(
+        optim(c(amp,shift), residual_sum_squared_third_rest)$par,
+        optim(c(amp,shift), residual_sum_squared_third_rest)$value
+      )
+    )
+  }
+}
+
+est_parameters_third_rest <- val3_rest[val3_rest[,3] == min(val3_rest[,3]),1:2]
+# est_parameters_third_rest <- c(9.254592e+07, 4.783197e+01)
+
+
+third_wave_rest <- est_parameters_third_rest[1]*(dlnorm(
+  x3_rest + est_parameters_third_rest[2],
+  mean = est_parameters_first[2], sd=est_parameters_first[3]
 ))
 
-lines(
-  third_wave_df$date,
-  est_parameters_first[1]*(
-    dlnorm(
-      x3+est_parameters_third[4],
-      mean = est_parameters_first[2], sd=est_parameters_first[3]
-    )
-  ) , lty = "dashed", lwd = 2
+plot(
+  third_wave_df,
+  type = "l",
+  xlim=c(
+    min(third_wave_df$date),
+    max(third_wave_df$date[length(third_wave_df$date)] + 1:length(x3_rest))
+  )
 )
-
-
-plot(third_wave_df, type = "l")
-lines(x3_next,third_wave_rest)
-max(third_wave_rest)
-tail(third_wave_rest)
+lines(
+  third_wave_df$date[length(third_wave_df$date)] + 1:(length(x3_rest)),
+  third_wave_rest,
+  lty = "dashed", lwd = 2
+)
