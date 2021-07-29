@@ -323,10 +323,14 @@ plot(
   xlim=c(
     min(third_wave_df$date),
     max(third_wave_df$date[length(third_wave_df$date)] + 1:length(x3_rest))
+  ),
+  ylim=c(
+    0,
+    max(third_wave_df$cases[length(third_wave_df$date)] + 1:length(x3_rest))
   )
 )
 lines(
-  third_wave_df$date[length(third_wave_df$date)] + 1:(length(x3_rest)),
+  third_wave_df$date[1] + 1:357,
   third_wave_rest,
   lty = "dashed", lwd = 2
 )
