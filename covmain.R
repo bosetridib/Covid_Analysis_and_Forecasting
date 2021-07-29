@@ -109,6 +109,7 @@ for (shift in (length(x1)-30) : (length(x1)+30)) {
 est_parameters_first <- val1[val1[,5] == min(val1[,5]),1:4]
 # est_parameters_first <- c(1.178663e+08, 4.931919e+00, 6.258448e-01, 4.560777e+02)
 rm(val1)
+
 # The plot of the values would be as below.
 plot(first_wave_df$date, first_wave_df$cases, type = "l")
 lines(
@@ -311,7 +312,7 @@ for (shift in seq(-30,30, by=5)) {
 }
 
 est_parameters_third_remaining <- val3_remaining[val3_remaining[,3] == min(val3_remaining[,3]),1:2]
-# est_parameters_third_remaining <- c(9.448440e+07 4.668023e+01)
+# est_parameters_third_remaining <- c(9.448440e+07, 4.668023e+01)
 rm(val3_remaining)
 
 third_wave_remaining_df <- data.frame(
@@ -324,6 +325,11 @@ third_wave_remaining_df <- data.frame(
   )
 )
 
+# The remaining cases would tend to decrease as the cases reduces to 4-digits. In
+# that case, we have the date of 'beginning of the end' as below.
+third_wave_remaining_df[third_wave_remaining_df$cases < 10^5,][1,]
+
+# The plot of the third wave with the stated end is as follows.
 plot(
   third_wave_df,
   type = "l",
@@ -350,3 +356,58 @@ lines(
   third_wave_remaining_df$cases,
   lty = "dashed", lwd = 2
 )
+abline(v=third_wave_remaining_df[third_wave_remaining_df$cases < 10^5,][1,][1])
+
+# est_parameters_first <- c(1.178663e+08, 4.931919e+00, 6.258448e-01, 4.560777e+02)
+# est_parameters_second <- c(2.545835e+07, 6.861743e+01, 2.188808e+01, 3.502473e+05)
+# est_parameters_third <- c(1.330033e+09, 7.505285e+00, 1.528345e+00, 3.000064e+01)
+# est_parameters_third_remaining <- c(9.448440e+07, 4.668023e+01)
+
+# The complete graph would be as below.
+
+plot(
+  daily_cases_df,
+  type = "l",
+  xlim=c(
+    min(daily_cases_df$date),
+    max(third_wave_remaining_df$date)
+  ),
+  ylim=c(
+    0,
+    max(daily_cases_df$cases)
+  )
+)
+lines(
+  first_wave_df$date,
+  est_parameters_first[1]*(
+    dlnorm(
+      est_parameters_first[4] - x1,
+      mean = est_parameters_first[2], sd=est_parameters_first[3]
+    )
+  ) , lty = "dashed", lwd = 2
+)
+lines(
+  second_wave_df$date,
+  est_parameters_second[4] + est_parameters_second[1]*(
+    dnorm(
+      x2,
+      mean = est_parameters_second[2], sd=est_parameters_second[3]
+    )
+  ) , lty = "dashed", lwd = 2
+)
+lines(
+  third_wave_df$date,
+  est_parameters_third_remaining[1]*(
+    dlnorm(
+      x3+est_parameters_third_remaining[2],
+      mean = est_parameters_first[2], sd=est_parameters_first[3]
+    )
+  ) , lty = "dashed", lwd = 2
+)
+lines(
+  third_wave_remaining_df$date,
+  third_wave_remaining_df$cases,
+  lty = "dashed", lwd = 2
+)
+
+abline(v=third_wave_remaining_df[third_wave_remaining_df$cases < 10^5,][1,][1])
