@@ -88,7 +88,7 @@ residual_sum_squared_first <- function(parameter) {
 
 val1 <- NULL
 
-for (shift in (length(x)-30) : (length(x)+30)) {
+for (shift in (length(x1)-30) : (length(x1)+30)) {
   for (amp in seq(10^7,3*10^8, by=10^7)){
     for (meanval in seq(2.5,7.5, by=0.5)){
       for (stddev in seq(0.10,1.10, by=0.05)){
@@ -108,7 +108,7 @@ for (shift in (length(x)-30) : (length(x)+30)) {
 # all the iterations, the parameters that minimize the RSS function 'overall':
 est_parameters_first <- val1[val1[,5] == min(val1[,5]),1:4]
 # est_parameters_first <- c(1.178663e+08, 4.931919e+00, 6.258448e-01, 4.560777e+02)
-
+rm(val1)
 # The plot of the values would be as below.
 plot(first_wave_df$date, first_wave_df$cases, type = "l")
 lines(
@@ -163,6 +163,7 @@ for (shift in seq(2*10^5, 4*10^5, by=5*10^4)) {
 
 est_parameters_second <- val2[val2[,5] == min(val2[,5]),1:4]
 # est_parameters_second <- c(2.545835e+07, 6.861743e+01, 2.188808e+01, 3.502473e+05)
+rm(val2)
 
 plot(second_wave_df$date, second_wave_df$cases, type = "l")
 lines(
@@ -217,6 +218,7 @@ for (shift in seq(-30,30, by=5)) {
 
 est_parameters_third <- val3[val3[,5] == min(val3[,5]),1:4]
 # est_parameters_third <- c(1.330033e+09, 7.505285e+00, 1.528345e+00, 3.000064e+01)
+rm(val3)
 
 # The plot of the values would be as below.
 plot(third_wave_df$date, third_wave_df$cases, type = "l")
@@ -264,21 +266,21 @@ lines(
 
 
 # -------------------------------- Predict -------------------------------- #
-# With these parameters, we can PREDICT when the third wave would end. It is
-# assumed here that the third wave is the final one, and for that reason the
-# parameters would tell us when would the cases be lower or maximized, which
-# might suggest the time Covid cases would supposedly be ending.
+# With these parameters, we can PREDICT when the third wave would end, or at
+# least tend to decrease. It is assumed here that the third wave is the
+# final, and hence the parameters would tell us the required information.
 
-# Assuming that the wave would last for 400 days (about the length of first wave)
-# we estimate the number of expected cases for the rest of the peiod.
-x3_rest <- 1:(400 - length(x3))
+# Assuming that the third wave would last for 400 days (about the length
+# of first wave) we estimate the number of expected cases for the remaining of
+# the peiod.
+x3_remaining <- (length(x3)+1):400
 
 # Assuming that the third wave would have the same mean and standard deviation
 # as the first, and only the positional and shifting parameters would change,
-# we can restrict the estimation procedure so as to predict the cases. So,
+# we can restricted the estimation procedure so as to predict the cases. So,
 # fixing the mean and sd, we may estimate the amplitude and the shifting parameters.
 
-residual_sum_squared_third_rest <- function(parameter) {
+residual_sum_squared_third_remaining <- function(parameter) {
   return(
     sum(
       (
@@ -294,43 +296,57 @@ residual_sum_squared_third_rest <- function(parameter) {
   )
 }
 
-val3_rest <- NULL
+val3_remaining <- NULL
 
 for (shift in seq(-30,30, by=5)) {
-  for (amp in seq(10^7,4*10^8, by=10^7)) {
-    val3_rest <- rbind(
-      val3_rest,
+  for (amp in seq(10^7,5*10^8, by=10^7)) {
+    val3_remaining <- rbind(
+      val3_remaining,
       c(
-        optim(c(amp,shift), residual_sum_squared_third_rest)$par,
-        optim(c(amp,shift), residual_sum_squared_third_rest)$value
+        optim(c(amp,shift), residual_sum_squared_third_remaining)$par,
+        optim(c(amp,shift), residual_sum_squared_third_remaining)$value
       )
     )
   }
 }
 
-est_parameters_third_rest <- val3_rest[val3_rest[,3] == min(val3_rest[,3]),1:2]
-# est_parameters_third_rest <- c(9.254592e+07, 4.783197e+01)
+est_parameters_third_remaining <- val3_remaining[val3_remaining[,3] == min(val3_remaining[,3]),1:2]
+# est_parameters_third_remaining <- c(9.448440e+07 4.668023e+01)
+rm(val3_remaining)
 
-
-third_wave_rest <- est_parameters_third_rest[1]*(dlnorm(
-  x3_rest + est_parameters_third_rest[2],
-  mean = est_parameters_first[2], sd=est_parameters_first[3]
-))
+third_wave_remaining_df <- data.frame(
+  'date' = min(third_wave_df$date)+(x3_remaining-1),
+  'cases' = est_parameters_third_remaining[1]*(
+    dlnorm(
+      x3_remaining + est_parameters_third_remaining[2],
+      mean = est_parameters_first[2], sd=est_parameters_first[3]
+    )
+  )
+)
 
 plot(
   third_wave_df,
   type = "l",
   xlim=c(
     min(third_wave_df$date),
-    max(third_wave_df$date[length(third_wave_df$date)] + 1:length(x3_rest))
+    max(third_wave_remaining_df$date)
   ),
   ylim=c(
     0,
-    max(third_wave_df$cases[length(third_wave_df$date)] + 1:length(x3_rest))
+    max(third_wave_df$cases)
   )
 )
 lines(
-  third_wave_df$date[1] + 1:357,
-  third_wave_rest,
+  third_wave_df$date,
+  est_parameters_third_remaining[1]*(
+    dlnorm(
+      x3+est_parameters_third_remaining[2],
+      mean = est_parameters_first[2], sd=est_parameters_first[3]
+    )
+  ) , lty = "dashed", lwd = 2
+)
+lines(
+  third_wave_remaining_df$date,
+  third_wave_remaining_df$cases,
   lty = "dashed", lwd = 2
 )
