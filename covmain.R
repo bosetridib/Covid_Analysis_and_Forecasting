@@ -234,38 +234,6 @@ lines(
 )
 
 
-
-# ------------------------ Complete Plot ------------------------ #
-plot(daily_cases_df, type = "l", lwd = 1)
-lines(
-  first_wave_df$date,
-  est_parameters_first[1]*(
-    dlnorm(
-      est_parameters_first[4] - x1,
-      mean = est_parameters_first[2], sd=est_parameters_first[3]
-    )
-  ) , lty = "dashed", lwd = 2
-)
-lines(
-  second_wave_df$date,
-  est_parameters_second[4] + est_parameters_second[1]*(
-    dnorm(
-      x2,
-      mean = est_parameters_second[2], sd=est_parameters_second[3]
-    )
-  ) , lty = "dashed", lwd = 2
-)
-lines(
-  third_wave_df$date,
-  est_parameters_third[1]*(
-    dlnorm(
-      x3+est_parameters_third[4],
-      mean = est_parameters_third[2], sd=est_parameters_third[3]
-    )
-  ) , lty = "dashed", lwd = 2
-)
-
-
 # -------------------------------- Predict -------------------------------- #
 # With these parameters, we can PREDICT when the third wave would end, or at
 # least tend to decrease. It is assumed here that the third wave is the
