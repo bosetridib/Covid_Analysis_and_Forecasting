@@ -13,3 +13,11 @@ For the normal distribution be Z ~ N(x,m,s), the curve would be down towards the
 Warning:
 
 The iterations may take a long time, especially if one's using a processor like C2D (which is unfortunately I am using). For that, the default outcomes are provided in the comments below the multilevel-for-loops. More iterations would definitely provide better, more efficient results - but 'necessarily' requires a better processor.
+
+The likely outcomes:
+
+The trend
+![alt text](https://github.com/bosetridib/Covid_Analysis_and_Forecasting/blob/main/CovidTrendSample.jpeg)
+
+The forecast
+![alt text](https://github.com/bosetridib/Covid_Analysis_and_Forecasting/blob/main/CovidForecastSample.jpeg)
