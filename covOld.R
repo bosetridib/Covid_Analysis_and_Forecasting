@@ -30,7 +30,7 @@ fn <- function(para) {
 }
 
 # Initiate variables for the computation of OLS parameters
-val <- NULL ; k <- 1; m <- matrix(ncol = 3)
+val <- NULL ; k <- 1; m <- NULL
 
 for (h in seq(2*10^7,8*10^7,by=5*10^6)) {
   for (i in seq(100,1000,by=25)) {
@@ -39,7 +39,7 @@ for (h in seq(2*10^7,8*10^7,by=5*10^6)) {
       # value of the minimized RSS stored
       val[k] <- optim(  c(h,i,j),fn  )$value
       # Each m would have the different h,i,j
-      m[k,] <- c(h,i,j)
+      m <- rbind(m, c(h,i,j))
       k <- k+1
     }
   }
@@ -47,7 +47,7 @@ for (h in seq(2*10^7,8*10^7,by=5*10^6)) {
 
 
 # Which RSS is the lowest will determine the optimized parameters h,i,j
-m[which(val == min(val))]
+m[which(val == min(val)),]
 
 # The estimated normal distribution line
 par <- c(5.7*10^07 , 220 , 70)
