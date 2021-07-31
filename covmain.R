@@ -27,7 +27,7 @@ plot(daily_cases_df, type = "l")
 # into log-normal and normal distribution. The third wave can be assumed to be
 # symmetrically log-normal like the first one.
 
-# ================= The deconstruction can be done as below ================= #
+# ========================= The deconstruction ========================= #
 
 # Under visual sight, the first wave ends somewhere in Feb-Mar.
 plot(daily_cases_df[daily_cases_df$date > "2021-01-01",], type = "l")
