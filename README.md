@@ -4,7 +4,9 @@ This project aims to build the trend of the daily covid cases by the method of _
 
 ## Installation
 
-Nothing except R is currently required to run this project. Moreover, nothing except the built-in packages are required within R.
+Nothing except R (https://www.r-project.org/) is currently required to run this project. Moreover, nothing except the built-in packages are required within R. The MS-Windows link to install R is https://cran.r-project.org/bin/windows/base/, and the MacOS link is https://cran.r-project.org/bin/macosx/. For linux one may see https://cran.r-project.org/bin/linux/, but installation from any package manager would be sufficient.
+
+I used RStudio IDE (https://www.rstudio.com/products/rstudio/download/#download) which can be downloaded from their official website or from any available linux package magers.
 
 ### Warning
 
@@ -29,3 +31,22 @@ The above graph is one of the likely outcome, showing the dashed line as the tre
 ![alt text](https://github.com/bosetridib/Covid_Analysis_and_Forecasting/blob/main/CovidForecastSample.jpeg "The forecast")
 
 The above plot would change with time, as more data is incorporated. The third wave estimation would change each day, until the _war with pandemic_ is over.
+
+## Projects
+
+There are two branches. The old one is dated to June, 2020 and based on the data until then. The main project however, is based on new data and incorporates the dynamic aspect of addition of data each day. The basic idea remains the same.
+
+```R
+# The idea
+
+u <- rnorm(100,0,10000)
+
+x <- 1:100
+
+y <- 10000000*dnorm(x,50,20)
+
+plot(y, type = "l", ylim = c(min(u),max(y1)))
+# lines(x,u)
+lines(y1+u)
+```
+The visual inspection of the above trend and variation in the above plot has what inspired the project in the beginning, but further effort was a result of learning more and more about data science and research instincts.
