@@ -51,5 +51,7 @@ m[which(val == min(val)),]
 
 # The estimated normal distribution line
 par <- c(5.7*10^07 , 220 , 70)
+
+# The plot represents the projections.
 plot(t, who_daily_t, type="l")
 lines(t,optim(par, fn)$par[1]*dnorm(x,optim(par, fn)$par[2],optim(par, fn)$par[3]))

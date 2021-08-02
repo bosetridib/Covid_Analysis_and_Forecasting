@@ -378,4 +378,5 @@ lines(
   lty = "dashed", lwd = 2
 )
 
+# The line represents the expected date on which the cases would be reduced below 100k.
 abline(v=third_wave_remaining_df[third_wave_remaining_df$cases < 10^5,][1,][1])

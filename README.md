@@ -49,4 +49,8 @@ plot(y, type = "l", ylim = c(min(u),max(y1)))
 # lines(x,u)
 lines(y1+u)
 ```
-The visual inspection of the above trend and variation in the above plot has what inspired the project in the beginning, but further effort was a result of learning more and more about data science and research instincts.
+The visual inspection of the above trend and variation in the above plot has what inspired the project in the beginning, but further effort was a result of learning more about data science and independent researches.
+
+### Old Project
+
+The files covOld and covOldL represents the old project, which was done in June, 2020 during the beginning of the first wave.

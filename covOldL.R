@@ -34,7 +34,12 @@ estd <- optim(parr, fnL)$par[1]*dlnorm(x,optim(parr, fnL)$par[2],optim(parr, fnL
 plot(t, who_daily_t, type="l")
 lines(t,estd)
 
+# The projection would be taken for next 200 days.
 y <- 200
+
+# The expected date in which the cases would be reduced.
 t[which(optim(parr, fnL)$par[1]*dlnorm(x+y,optim(parr, fnL)$par[2],optim(parr, fnL)$par[3]) < 100)]+y
+
+# The plot represents the projections.
 plot( c(t,t[length(t)]+(1:y)), c( who_daily_t , rep(who_daily_t[which.max(who_daily_t)],y) ), type="l" )
 lines(c(t,t[length(t)]+(1:y)), optim(parr, fnL)$par[1]*dlnorm(c(x,x[length(x)]+(1:y)),optim(parr, fnL)$par[2],optim(parr, fnL)$par[3]))
