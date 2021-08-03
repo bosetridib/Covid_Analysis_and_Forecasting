@@ -380,3 +380,7 @@ lines(
 
 # The line represents the expected date on which the cases would be reduced below 100k.
 abline(v=third_wave_remaining_df[third_wave_remaining_df$cases < 10^5,][1,][1])
+
+# The expected date at which the third, and probably the final wave be
+# over will be
+third_wave_remaining_df[third_wave_remaining_df$cases < 10^5,][1,][1]
