@@ -92,11 +92,12 @@ for (shift in (length(x1)-30) : (length(x1)+30)) {
   for (amp in seq(10^7,3*10^8, by=10^7)){
     for (meanval in seq(2.5,7.5, by=0.5)){
       for (stddev in seq(0.10,1.10, by=0.05)){
+        optimum_values <- optim(c(amp,meanval,stddev,shift), residual_sum_squared_first)
         val1 <- rbind(
           val1,
           c(
-            optim(c(amp,meanval,stddev,shift), residual_sum_squared_first)$par,
-            optim(c(amp,meanval,stddev,shift), residual_sum_squared_first)$value
+            optimum_values$par,
+            optimum_values$value
           )
         )
       }
@@ -150,11 +151,12 @@ for (shift in seq(2*10^5, 4*10^5, by=5*10^4)) {
   for (amp in seq(10^6,10*10^7, by=5*10^6)){
     for (meanval in seq(60,70, by=5*1)){
       for (stddev in seq(10,100, by=10)){
+        optimum_values <- optim(c(amp,meanval,stddev,shift), residual_sum_squared_second)
         val2 <- rbind(
           val2,
           c(
-            optim(c(amp,meanval,stddev,shift), residual_sum_squared_second)$par,
-            optim(c(amp,meanval,stddev,shift), residual_sum_squared_second)$value
+            optimum_values$par,
+            optimum_values$value
           )
         )
       }
@@ -205,11 +207,12 @@ for (shift in seq(-30,30, by=5)) {
   for (amp in seq(10^7,4*10^8, by=5*10^7)){
     for (meanval in seq(2.5,7.5, by=0.5)){
       for (stddev in seq(0.10,1.10, by=0.10)){
+        optimum_values <- optim(c(amp,meanval,stddev,shift), residual_sum_squared_third)
         val3 <- rbind(
           val3,
           c(
-            optim(c(amp,meanval,stddev,shift), residual_sum_squared_third)$par,
-            optim(c(amp,meanval,stddev,shift), residual_sum_squared_third)$value
+            optimum_values$par,
+            optimum_values$value
           )
         )
       }
@@ -269,11 +272,12 @@ val3_remaining <- NULL
 
 for (shift in seq(-30,30, by=5)) {
   for (amp in seq(10^7,5*10^8, by=10^7)) {
+    optimum_values <- optim(c(amp,shift), residual_sum_squared_third_remaining)
     val3_remaining <- rbind(
       val3_remaining,
       c(
-        optim(c(amp,shift), residual_sum_squared_third_remaining)$par,
-        optim(c(amp,shift), residual_sum_squared_third_remaining)$value
+        optimum_values$par,
+        optimum_values$value
       )
     )
   }
