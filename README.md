@@ -1,6 +1,6 @@
 # Covid Forecast by Curve-Fitting with R
 
-This project aims to build the trend of the daily covid cases by the method of _curve fitting_. It is assumed that the first and third wave can be described by log-normal distribution while the second wave can be described by normal distribution. The project would further aim to de-trend the data and build **time-series models** later on. The main concern of the project is to build the trend of the data to predict the cases in the near future. The older works in the project is also included separately.
+This project aims to build the trend of the daily covid cases by the method of _curve fitting_. It is assumed that the first and third waves can be described by log-normal distribution while the second wave can be described by the normal distribution. The project would further aim to de-trend the data and build **time-series models** later on. The main concern of the project is to build the trend of the data to predict the cases in the near future. The older works in the project are also included separately.
 
 ## Installation
 
@@ -20,7 +20,7 @@ The first three iterations to estimate the parameters may take a long time, espe
 
 ### Flipped-Lnorm:
 
-For the log normal distribution be Z ~ L(x,m,s), the curve is right-skewed. But in our cases, we have to build the trend which is left-skewed, which is supposed to be a flipped version of the usual curve. For this, to build such a curve, we take y=c-x, for c be the point on the horizontal axis where the required left-skewed curve would end. We have estimated the curve as y=c-x for Z ~ a.L(x,m,s), where a is the amplitude, m is mean, s is sd and c is the shift parameter - the four parameters that would be estimated with the 4-level iterations. TL;DR - the shifted curve of Z ~ a.L(x,m,s) would be a.L(y,m,s) or a.L(c-x,m,s)
+For the log-normal distribution be Z ~ L(x,m,s), the curve is right-skewed. But in our cases, we have to build the trend which is left-skewed, which is supposed to be a flipped version of the usual curve. For this, to build such a curve, we take y=c-x, for c be the point on the horizontal axis where the required left-skewed curve would end. We have estimated the curve as y=c-x for Z ~ a.L(x,m,s), where a is the amplitude, m is mean, s is sd and c is the shift parameter - the four parameters that would be estimated with the 4-level iterations. TL;DR - the shifted curve of Z ~ a.L(x,m,s) would be a.L(y,m,s) or a.L(c-x,m,s).
 
 ### Shifted-norm:
 
@@ -28,7 +28,7 @@ For the normal distribution be Z ~ N(x,m,s), the curve would be down towards the
 
 ### The likely outcomes:
 
-The sample outcomes are presented here, dating to upto July, 2021. The first one demonstrates the trend building while the second on shows the projections and expected date of when the pandemic is likely over.
+The sample outcomes are illustrated here, dating up until July 2021. The first one demonstrates the trend building while the second one shows the projections and expected date of when the pandemic is likely over.
 
 ![alt text](https://github.com/bosetridib/Covid_Analysis_and_Forecasting/blob/main/CovidTrendJuly21.jpeg "The trend")
 
@@ -36,11 +36,11 @@ The above graph is one of the most likely outcomes. The dashed line is the trend
 
 ![alt text](https://github.com/bosetridib/Covid_Analysis_and_Forecasting/blob/main/CovidForecastJuly21.jpeg "The forecast")
 
-The above plot would change with time, as more data is incorporated. The third wave estimation would change each day, until the _war with pandemic_ is over.
+The above plot would change with time, as more data is incorporated. The third wave estimation would change each day until the _war with pandemic_ is over.
 
 ## Projects
 
-There are two currently. The old one is dated to June, 2020 and based on the data until then. The main project however, is based on new data and incorporates several additions and many modification in the estimation and coding. The basic idea, however, remains the same.
+There are two currently. The old one is dated June 2020 and is based on the data until then. The main project, however, is based on new data and incorporates several additions and many modifications in the estimation and coding. The basic idea, however, remains the same.
 
 ```R
 # The idea
@@ -62,16 +62,16 @@ plot(y+u, type = "l")
 par(default_par)
 rm(default_par)
 ```
-The visual inspection of the above trend and variation in the above plot has what inspired the project in the beginning, but further effort was a result of learning more about data science, econometrics and through independent researches.
+The visual inspection of the above trend and variation in the above plot has what inspired the project in the beginning, but the further effort was a result of learning more about data science, econometrics, and independent researches.
 
 ### Main Project
 
-The main project is on the file covmain.R, on which the subsequent estimations in time-series models will be based. In the main project, the flipped and shifted versions of the PDFs is used, which was not incorporated in the old one. In the estimation, apart from the shifting parameters and the flipped form of the PDFs, the method for projection of the cases is also different. For projection, parameters of the first wave are used in estimation, as they seem to be having similar qualities.
+The main project is on the file covmain.R, on which the subsequent estimations in time-series models will be based. In the main project, the flipped and shifted versions of the PDFs are used, which were not incorporated in the old one. In the estimation, apart from the shifting parameters and the flipped form of the PDFs, the method for projection of the cases is also different. For projection, parameters of the first wave are used in estimation, as they seem to be having similar qualities.
 
 ### Old Project
 
-The files covOld.R and covOldL.R represents the old project, which was done in June, 2020 during the beginning of the first wave. The plot suggests that the data indeed have a trend with normal or log-normal PDF (probability density function). Both of the estimation methods in the two files are taken and modified in the main project. The graph below would show what were the previous results.
+The files could.R and covOldL.R represent the old project, which was done in June 2020 during the beginning of the first wave. The plot suggests that the data indeed have a trend with normal or log-normal PDF (probability density function). Both of the estimation methods in the two files are taken and modified in the main project. The graph below would show what were the previous results.
 
 ## Future
 
-The estimated parameters and the dataframes in the main files would be taken to build time-series models. It can be suspected that the models are of the form ARIMA and suffers from volatility.
+The estimated parameters and the data-frames in the main files would be taken to build time-series models. It can be suspected that the models are of the form ARIMA and suffers from volatility.
